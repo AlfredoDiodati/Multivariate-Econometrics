@@ -4,8 +4,47 @@ Please briefly report here notes for the parts of your code that need to be used
 under a specific section.
 
 - [Code documentation](#code-documentation)
+  - [helper.py](#helperpy)
+    - [Function: `acf(x)`](#function-acfx)
+    - [Function: `dickey_fuller(x)`](#function-dickey_fullerx)
+    - [Function: `ljung_box(x)`](#function-ljung_boxx)
   - [Part 1, Question 2](#part-1-question-2)
     - [Additional notes](#additional-notes)
+
+## helper.py
+### Function: `acf(x)`
+Computes the **autocorrelation function** of a time series.
+
+**Parameters**
+- `x`: `np.ndarray` — input time series.
+
+**Returns**
+- `np.ndarray`: autocorrelation values (biased version).
+
+### Function: `dickey_fuller(x)`
+Performs the **Dickey–Fuller test** for a unit root.
+
+**Parameters**
+- `x`: `np.ndarray` — time series.
+
+**Returns**
+- `(delta_hat, t_stat)`: regression coefficient and t-statistic.
+
+**Model**
+Δxₜ = δxₜ₋₁ + uₜ
+
+Reject the null of a unit root if the t-statistic is **below** the critical value.
+
+---
+
+### Function: `ljung_box(x)`
+Computes the **Ljung–Box Q-statistic** and p-values for serial correlation.
+
+**Parameters**
+- `x`: `np.ndarray` — time series.
+
+**Returns**
+- `(lj_bx, pv)`: test statistic and p-values.
 
 ## Part 1, Question 2
 
@@ -34,4 +73,3 @@ which is true only when the code is runned from the file itself.
 ### Additional notes
 
 - the long run and contemporaneous variance are the same because the errors are stationary
-- the long range autocorrelations are spiked because they are estimated with low observations, we need to ask the professor how many lags are actually required.
