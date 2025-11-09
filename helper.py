@@ -28,3 +28,56 @@ def ljung_box(x:np.ndarray) -> tuple[float, float]:
     lj_bx = n*(n+2)*np.cumsum(acf(x)**2/np.arange(n, 0, -1))
     pv = 1 - chi2.cdf(lj_bx, lags)
     return lj_bx, pv
+
+def aug_dickey_fuller(x: np.ndarray, k: int) -> dict:
+    """Augmented Dickey-Fuller Test"""
+    
+    dz = np.diff(z)
+    if k == 0:
+        # This part includes the simple Dickey-Fuller Test
+        y = dz
+        X = z[:-1][:, None]
+        n_obs = len(y)
+
+    else:
+        # This is the Augmented part
+        y = dz[k:]
+        n_obs = len(y)
+        
+        # Y vector starting from t = k + 1
+        x1_level = z[k:-1]
+        
+        X-lags = np.zeros((n_obs, k))
+        for i in range(k):
+            lag = i + 1
+            X_lags[:, i] = dz[k-lag;-lag]
+
+        X = np.column_stack([x1_level, X_lags])
+
+    coeffs, ssr_list, _, _ = np.linalg.lstsq(X, y, rcond=None)
+
+    residuals = y - X @ coeffs
+    ssr = np.sum(residuals**2)
+
+    delta_hat = coeffs[0]
+
+    k_params = X.shape[1]
+
+    s2 = ssr / (n_obs - k_params)
+
+    t_stat = delta_hat / se_delta
+
+    return {
+        'delta_hat': delta_hat,
+        't_stat': t_stat,
+        'residuals': residuals,
+        'ssr': ssr,
+        'n_obs': n_obs,
+        'k_params;: k_params
+    }
+
+
+
+
+
+    
