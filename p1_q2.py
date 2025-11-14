@@ -50,15 +50,8 @@ df_residuals = first_difference - df_coeff * correlated_random_walk[:-1]
 lb_stat, lb_pv = ljung_box(df_residuals)
 failed = np.sum([lb_pv <= 0.05])
 
-if ismain: 
-    plt.plot(df_residuals)
-    plt.xlabel("Time")
-    plt.ylabel(r"Residual")
-    plt.title("Dickey-Fuller Regression Residuals")
-    plt.show()
-    
-    print(f"Number of failed Ljung Box tests {failed} on {len(lb_pv)} total")
-    
+if ismain: print(f"Number of failed Ljung Box tests {failed} on {len(lb_pv)} total")
+
 # Task 2.3
 
 def calc_aic(n_obs, ssr, k_params):
@@ -123,6 +116,8 @@ if ismain:
 
     print(f"Ljung-Box Test: {failed_adf} out of {len(lb_pv_adf)} tests failed (p<=0.05).")
     print(f"Since we failed {failed_adf} out of {len(lb_pv_adf)}, we have not successfully removed serial correlation.")
+
+
 
 # Task 2.4
 
