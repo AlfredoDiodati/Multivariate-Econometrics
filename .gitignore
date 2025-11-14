@@ -3,6 +3,18 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+#Latex
+*.aux
+*.synctex.gz
+*.tex
+*.log
+*.aux
+*.bib
+*.fdb_latexmk
+*.fls
+*.out
+*.bbl
+*.pdf
 # C extensions
 *.so
 
@@ -200,7 +212,6 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
-
 # Marimo
 marimo/_static/
 marimo/_lsp/
