@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from helper import acf, dickey_fuller, ljung_box
+from helper import acf, dickey_fuller, ljung_box, aug_dickey_fuller
 
 rng: np.random.Generator = np.random.default_rng(seed = 123)
 ismain: bool = __name__ == '__main__'
@@ -35,8 +35,10 @@ if ismain:
     plt.title(r"Autocorrelation of $\Delta z_t$")
     plt.show()
 
-error_variance = innovation_variance/(1.0 - error_ar_coefficient)**2
-if ismain: print(f"Contemporaneous and long run variance are: {error_variance}")
+cont_variance = innovation_variance/(1.0 - error_ar_coefficient**2) # see report for derivation
+if ismain: 
+    print(f"Contemporaneous variance: {cont_variance}")
+    print(f"Long run variance: {3 * cont_variance}") # see report for derivation
 
 # Task 2.2
 df_coeff, df_stat = dickey_fuller(correlated_random_walk)
