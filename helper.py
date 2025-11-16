@@ -17,7 +17,7 @@ def dickey_fuller(x: np.ndarray) -> tuple[float, float]:
     x_lag = x[:-1]
     delta_hat = np.linalg.lstsq(x_lag[:, None], dx, rcond=None)[0][0]
     u_hat = dx - delta_hat * x_lag
-    s2_u = np.mean(u_hat**2)
+    s2_u = np.sum(u_hat**2) / (len(x_lag) - 1)
     t_stat = delta_hat / np.sqrt(s2_u/np.sum(x_lag**2))
     return delta_hat, t_stat
 

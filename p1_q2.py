@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 from helper import acf, dickey_fuller, ljung_box, aug_dickey_fuller
@@ -43,17 +44,39 @@ if ismain:
 # Task 2.2
 df_coeff, df_stat = dickey_fuller(correlated_random_walk)
 if ismain:
-    print(f"""Dickey Fuller estimated coefficients {df_coeff} and t-statistic {df_stat} \n
+    print(f"""Dickey Fuller estimated coefficient {df_coeff.__round__(4)} and t-statistic {df_stat.__round__(2)} \n
     Against the critical values 1% -2.58, 5% -1.95, 10% -1.62 \n,
     Since {df_stat.__round__(2)} > -1.95 we fail to reject the null hypothesis.
     """)
 
 df_residuals = first_difference - df_coeff * correlated_random_walk[:-1]
+
+if ismain:
+    plt.plot(df_residuals)
+    plt.xlabel("Time")
+    plt.ylabel("Residuals")
+    plt.title(r"Dickey-Fuller Regression Residuals$")
+    plt.show()
+
 lb_stat, lb_pv = ljung_box(df_residuals)
-failed = np.sum([lb_pv <= 0.05])
 
-if ismain: print(f"Number of failed Ljung Box tests {failed} on {len(lb_pv)} total")
+lags = np.arange(1, 20)
+lb_stat_filtered, lb_pv_filtered = lb_stat[lags], lb_pv[lags]
 
+lb_table = pd.DataFrame({
+    ' Ljung-Box Statistic': lb_stat_filtered,
+    'Lag': lags
+})
+
+pv_table = pd.DataFrame({
+    'Ljung-Box p. value': lb_pv_filtered,
+    'Lag': lags
+})
+
+if ismain:
+    print(f"Ljung-Box test statistics: \n{lb_table}")
+    print(f"\nLjung-Box test statistics: \n{pv_table}")
+    
 # Task 2.3
 
 def calc_aic(n_obs, ssr, k_params):
