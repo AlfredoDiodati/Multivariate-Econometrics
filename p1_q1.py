@@ -41,6 +41,7 @@ if ismain:
     plt.show()
     
 # task 1.2
+
 intercept, slope = ar_coefficients(random_walk)
 se_intercept, se_slope = ar_standard_errors(random_walk)
 t_intercept = intercept / se_intercept
@@ -60,7 +61,7 @@ acf_residuals = acf(residuals)
 
 if ismain:
     
-    print(fr"AR(1) with intercept's R^2: {R2.__round__(3)}")
+    print(fr"\n AR(1) with intercept's R^2: {R2.__round__(3)}")
     
     plt.bar(lags[:-1], acf_residuals)
     plt.xlabel("Lag")
@@ -74,7 +75,7 @@ lags = np.arange(1, 20)
 lb_stat_filtered, lb_pv_filtered = lb_stat[lags], lb_pv[lags]
 
 lb_table = pd.DataFrame({
-    'Ljung-Box Statistic': lb_stat_filtered,
+    'Ljung-Box Statistics': lb_stat_filtered,
     'Lag': lags
 })
 
@@ -95,8 +96,23 @@ if ismain:
     plt.show()
     
 # Task 1.3
-
 _, df_stat = dickey_fuller(random_walk)
+df_critical_v = -1.62
+isrejected = df_stat < df_critical_v
 
 if ismain:
-    print(f"Dickey Fuller statistics {df_stat}")
+    print(f"\n Dickey Fuller statistics of Random Walk {df_stat.__round__(3)}")
+    if isrejected: print(f"Since {df_stat} < {df_critical_v} we reject the null at a 10% confidence interval")
+    else: print(f"Since {df_stat.__round__(3)} > {df_critical_v} we fail to reject the null at a 10% confidence interval")
+    
+first_differences = random_walk[1:]-random_walk[:-1]
+df_coeff_diff, df_stat_diff = dickey_fuller(first_differences)
+
+if ismain:
+    print(f"\n First differences of random walk \nDF coefficient {df_coeff_diff.__round__(3)} and statistics {df_stat_diff.__round__(3)}")
+    print(f"Therefore the null hpt. of a unit root is rejected, and we conclude the random walk is I(1) \n")
+    
+df_coeff_ar, df_stat_ar = dickey_fuller(ar)
+if ismain:
+    print(f"Stationary AR(1) \n DF coefficient {df_coeff_ar.__round__(3)} and statistics {df_stat_ar.__round__(3)}")
+    print(f"Therefore the null hpt. of a unit root is rejected.")
