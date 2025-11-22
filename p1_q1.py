@@ -63,7 +63,7 @@ if ismain:
     
     print(fr"\n AR(1) with intercept's R^2: {R2.__round__(3)}")
     
-    plt.bar(lags[:-1], acf_residuals)
+    plt.bar(np.arange(acf_residuals.shape[0]), acf_residuals)
     plt.xlabel("Lag")
     plt.ylabel("ACF")
     plt.title("ACF of residuals of Estimated AR(1) with intercept")
