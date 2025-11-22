@@ -53,7 +53,7 @@ if ismain:
     print(f"Estimated intercept {intercept.__round__(3)} with standard error {se_intercept.__round__(3)}")
     print(f"Estimated slope {slope.__round__(3)} with standard error {se_slope.__round__(3)}")
     print(f"Intercept and Slope t statistics: {t_intercept.__round__(3)} and {t_slope.__round__(3)} respectively")
-    print(f"...and corresponding p.values: {pv_intercept.__round__(3)} and {pv_intercept.__round__(3)} respectively")
+    print(f"...and corresponding p.values: {pv_intercept.__round__(3)} and {pv_slope.__round__(3)} respectively")
     
 residuals = random_walk[1:] - intercept - slope * random_walk[:-1]
 R2 = 1.0 - np.sum(residuals**2)/np.sum((random_walk[1:] - np.mean(random_walk[1:]))**2)
