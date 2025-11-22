@@ -66,7 +66,7 @@ if ismain:
     plt.bar(lags[:-1], acf_residuals)
     plt.xlabel("Lag")
     plt.ylabel("ACF")
-    plt.title("ACF of Mispecified AR(1) with intercept")
+    plt.title("ACF of Estimated AR(1) with intercept")
     plt.show()
     
 lb_stat, lb_pv = ljung_box(residuals)
@@ -92,7 +92,7 @@ if ismain:
     plt.plot(residuals)
     plt.xlabel("Time")
     plt.ylabel(r"Value")
-    plt.title("Residuals of mispecified AR(1) with intercept")
+    plt.title("Residuals of estimated AR(1) with intercept")
     plt.show()
     
 # Task 1.3
