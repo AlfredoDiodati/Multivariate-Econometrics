@@ -1,11 +1,47 @@
 import numpy as np
 from scipy.stats import chi2
 
-def acf(x) -> np.ndarray:
-    """Autocorrelation function. Note: biased as in most packages."""
+def acf(x):
+    "Standard biased acf function"
+    x = np.asarray(x)
+    x_center = x - np.mean(x)
     n = len(x)
-    x_center = x - np.nanmean(x)
-    return (np.correlate(x_center, x_center, mode='full'))[n-1:] / (np.nanvar(x)*n)
+    acov = np.correlate(x_center, x_center, mode='full')[n-1:] / n
+    return acov / acov[0]
+
+def acf_sample(x):
+    """Correct sample correction with unbiased denominator n-k"""
+    x = np.asarray(x)
+    x_center = x - np.mean(x)
+    n = len(x)
+    raw = np.correlate(x_center, x_center, mode='full')[n-1:]
+    gamma = raw / (np.arange(n, 0, -1))
+    return gamma / gamma[0]
+
+def ar_coefficients(x:np.ndarray)->tuple[float, float]:
+    """Return OLS estimated parameters of AR(1) model with intercept (intercept, slope)"""
+    x_new = x[1:]
+    x_lag = x[:-1]
+    x_nmean = x_new.mean()
+    x_lmean = x_lag.mean()
+    x_lcentered = (x_lag - x_lmean)
+    slope = np.sum(x_lcentered*(x_new - x_nmean))/np.sum(x_lcentered**2)
+    intercept = x_nmean - slope*x_lmean
+    return (intercept, slope)
+
+def ar_standard_errors(x:np.ndarray)->tuple[float, float]:
+    """Computes standard error of AR(1) with intercept with parameters"""
+    intercept, slope = ar_coefficients(x)
+    T = x.shape[0]
+    x_new = x[1:]
+    x_lag = x[:-1]
+    x_lmean = x_lag.mean()
+    x_lss = np.sum((x_lag - x_lmean)**2)
+    residuals = x_new - intercept - x_lag * slope
+    res_var = np.sum(residuals**2)/(T - 2.0)
+    se_slope = np.sqrt(res_var/x_lss)
+    se_intercept = np.sqrt(res_var*(1/(T-1.0)+x_lmean**2/x_lss))
+    return (se_intercept, se_slope)
 
 def dickey_fuller(x: np.ndarray) -> tuple[float, float]:
     """Dickey Fuller test for unit root.
@@ -22,7 +58,7 @@ def dickey_fuller(x: np.ndarray) -> tuple[float, float]:
     return delta_hat, t_stat
 
 def ljung_box(x:np.ndarray) -> tuple[float, float]:
-    """Ljung–Box test statistic and p. values"""
+    """Ljung-Box test statistic and p. values"""
     n = len(x)
     lags = np.arange(n)
     lj_bx = n*(n+2)*np.cumsum(acf(x)**2/np.arange(n, 0, -1))
@@ -81,9 +117,3 @@ def aug_dickey_fuller(z: np.ndarray, k: int) -> dict:
         'n_obs': n_obs,
         'k_params': k_params
     }
-
-
-
-
-
-    
