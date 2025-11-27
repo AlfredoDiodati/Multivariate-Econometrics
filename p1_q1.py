@@ -18,27 +18,31 @@ ar_coefficient = 0.7
 ar_errors = rng.normal(loc=0.0, scale=ar_variance, size=550)[50:]
 ar = np.convolve(ar_errors, ar_coefficient**np.arange(T), mode='full')[:T]
 
-if ismain:
-    plt.plot(random_walk, label="Random Walk")
-    plt.plot(ar, label=rf"AR(1) $\rho = {ar_coefficient}$")
-    plt.xlabel("Time")
-    plt.ylabel(r"Value")
-    plt.title("Random Walk and AR(1) processes")
-    plt.legend()
-    plt.show()
-    
 acf_rw = acf(random_walk)
 acf_ar = acf(ar)
 lags = np.arange(acf_rw.shape[0])
 
 if ismain:
-    plt.bar(lags, acf_rw, label="Random Walk")
-    plt.bar(lags, acf_ar, label=rf"AR(1) $\rho = {ar_coefficient}$")
-    plt.xlabel("Lag")
-    plt.ylabel("ACF")
-    plt.title(r"Autocorrelation of $y_t$ and $x_t$")
-    plt.legend()
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))  # 2 rows, 1 column
+
+    # --- Panel 1: Time series ---
+    axes[0].plot(random_walk, label="Random Walk")
+    axes[0].plot(ar, label=rf"AR(1) $\rho = {ar_coefficient}$")
+    axes[0].set_xlabel("Time")
+    axes[0].set_ylabel("Value")
+    axes[0].set_title("Random Walk and AR(1) processes")
+    axes[0].legend()
+
+    # --- Panel 2: ACFs ---
+    axes[1].bar(lags, acf_rw, label="Random Walk")
+    axes[1].bar(lags, acf_ar, label=rf"AR(1) $\rho = {ar_coefficient}$")
+    axes[1].set_xlabel("Lag")
+    axes[1].set_ylabel("ACF")
+    axes[1].set_title(r"Autocorrelation of $y_t$ and $x_t$")
+    axes[1].legend()
+    plt.tight_layout()
     plt.show()
+
     
 # task 1.2
 

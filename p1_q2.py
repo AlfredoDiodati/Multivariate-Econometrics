@@ -16,24 +16,28 @@ error_ar_coefficient = 0.5
 correlated_errors = np.convolve(innovation, error_ar_coefficient**np.arange(550), mode='full')[:550]
 correlated_random_walk = np.cumsum(correlated_errors)[50:]
 
-if ismain:
-    plt.plot(correlated_random_walk)
-    plt.xlabel("Time")
-    plt.ylabel(r"$z_t$")
-    plt.title("Random Walk with serially correlated innovations")
-    plt.show()
-
 first_difference = np.diff(correlated_random_walk)
 len_series = len(first_difference)
 lags = np.arange(len_series)
-
 acf_crw = acf(first_difference)
 
+
 if ismain:
-    plt.bar(lags, acf_crw)
-    plt.xlabel("Lag")
-    plt.ylabel("ACF")
-    plt.title(r"Autocorrelation of $\Delta z_t$")
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))  # 2 rows, 1 column
+
+    # --- Panel 1: Time series ---
+    axes[0].plot(correlated_random_walk)
+    axes[0].set_xlabel("Time")
+    axes[0].set_ylabel("Value")
+    axes[0].set_title("Random Walk with serially correlated innovations")
+
+    # --- Panel 2: ACFs ---
+    axes[1].bar(lags, acf_crw, label="Random Walk")
+    axes[1].bar(lags, acf_crw)
+    axes[1].set_xlabel("Lag")
+    axes[1].set_ylabel("ACF")
+    axes[1].set_title(r"Autocorrelation of $\Delta z_t$")
+    plt.tight_layout()
     plt.show()
 
 cont_variance = innovation_variance/(1.0 - error_ar_coefficient**2) # see report for derivation
