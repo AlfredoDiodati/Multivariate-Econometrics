@@ -61,7 +61,7 @@ def cd_test_statistic(residuals) ->tuple[float, float]:
             rho_ij = pairwise_residual_correlation(residuals, ci, cj)
             sum_rho += rho_ij
 
-    CD = np.sqrt((2 * T) / (N * (N - 1)) * sum_rho)
+    CD = np.sqrt(2 * T / (N * (N - 1))) * sum_rho
     p_value = 2 * (1 - norm.cdf(abs(CD)))
     return CD, p_value
 
