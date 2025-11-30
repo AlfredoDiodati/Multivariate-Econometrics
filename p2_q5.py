@@ -87,20 +87,57 @@ def residual_correlation_matrix(residuals):
             C.loc[i, j] = num / (denom_i * denom_j)
     return C
 
-cd_matrix = residual_correlation_matrix(residuals)
-plt.figure(figsize=(12, 10))
+# Heatmap is not clearly readible with full names, so we map them to abbreviations
 
-sns.heatmap(
-    cd_matrix,
-    cmap="viridis",
-    annot=True,
-    fmt=".2f",
-    annot_kws={"size": 6},
-    cbar_kws={"shrink": 0.7}
-)
+mapping = {
+    "Germany": "DE",
+    "France": "FR",
+    "Italy": "IT",
+    "Spain": "ES",
+    "Poland": "PL",
+    "Romania": "RO",
+    "Netherlands": "NL",
+    "Belgium": "BE",
+    "Greece": "GR",
+    "Portugal": "PT",
+    "Czech Republic": "CZ",
+    "Hungary": "HU",
+    "Sweden": "SE",
+    "Austria": "AT",
+    "Bulgaria": "BG",
+    "Denmark": "DK",
+    "Finland": "FI",
+    "Slovakia": "SK",
+    "Ireland": "IE",
+    "Croatia": "HR",
+    "Lithuania": "LT",
+    "Slovenia": "SI",
+    "Latvia": "LV",
+    "Estonia": "EE",
+    "Cyprus": "CY",
+    "Luxembourg": "LU",
+    "Malta": "MT",
+    "Norway": "NO",
+    "Switzerland": "CH",
+    "Iceland": "IS",
+}
+
+cd_matrix = residual_correlation_matrix(residuals)
+cd_matrix = cd_matrix.rename(index=mapping, columns=mapping)
 
 if ismain:
-    plt.xticks(rotation=45, ha="right", fontsize=7)
-    plt.yticks(fontsize=7)
+    plt.figure(figsize=(9, 7))
+
+    sns.heatmap(
+        cd_matrix,
+        cmap="viridis",
+        annot=False,
+        fmt=".2f",
+        annot_kws={"size": 4},
+        cbar_kws={"shrink": 0.6}
+    )
+
+    plt.xticks(rotation=90, fontsize=13)
+    plt.yticks(fontsize=13)
     plt.tight_layout()
     plt.show()
