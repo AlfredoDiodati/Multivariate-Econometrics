@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from scipy.stats import t
+from scipy.stats import norm
 import matplotlib.pyplot as plt
 from helper import acf, ar_coefficients, ar_standard_errors, ljung_box, dickey_fuller
 
@@ -50,8 +50,8 @@ intercept, slope = ar_coefficients(random_walk)
 se_intercept, se_slope = ar_standard_errors(random_walk)
 t_intercept = intercept / se_intercept
 t_slope = slope / se_slope
-pv_intercept = 2 * (1 - t.cdf(abs(t_intercept), df= T - 2))
-pv_slope = 2 * (1 - t.cdf(abs(t_slope), df= T - 2))
+pv_intercept = 2 * (1 - norm.cdf(abs(t_intercept)))
+pv_slope = 2 * (1 - norm.cdf(abs(t_slope)))
 
 if ismain:
     print(f"Estimated intercept {intercept.__round__(3)} with standard error {se_intercept.__round__(3)}")
