@@ -134,7 +134,7 @@ if ismain:
     adf_residuals = final_adf['residuals']
     acf_adf_residuals = acf(adf_residuals)
     plt.figure(figsize=(15,6))
-    plt.bar(range(len(acf_adf_residuals)), acf_adf_residuals)
+    plt.bar(range(1, len(acf_adf_residuals)), acf_adf_residuals[1:])
     plt.xlabel("Lag")
     plt.ylabel("Unbiased ACF")
     plt.title(f"ACF of Residuals from ADF(k={best_k})")
