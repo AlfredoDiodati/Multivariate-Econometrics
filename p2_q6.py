@@ -76,7 +76,7 @@ cce_mgc_se = cce_coefs_df.std()/ np.sqrt(n)
 print(f"CCE Mean Group Estimates: {cce_mgc_params}")
 print(f"\nCCE Mean Group Standard Errors: {cce_mgc_se}")
 
-#task 6.2
+#task 6.2.1
 
 #prepare pooled OLS and Mean Group data and CCE
 df_pooled_res = pd.DataFrame({'Pooled OLS': p2_q4.pooled_params, 'Pooled SE': p2_q4.pooled_bse})
@@ -93,3 +93,31 @@ final_order = [idx for idx in order if idx in comparison.index]
 comparison = comparison.reindex(final_order)
 
 print(comparison)
+
+#task 6.2.2
+
+# First we have to identify outliers
+investment_mean = cce_coefs_df['Investment'].mean()
+investment_std = cce_coefs_df['Investment'].std()
+
+threshold = 2
+outliers = cce_coefs_df[np.abs(cce_coefs_df['Investment'] - investment_mean) > threshold *investment_std]
+
+print(f"Outliers: {outliers}")
+
+#Now we re-estimate the CCE and drop the outliers
+cce_robust = cce_coefs_df.drop(outliers.index)
+
+# And we calculate the new CCE
+cce_mg_robust_params = cce_robust.mean()
+cce_mg_robust_se = cce_robust.std()/ np.sqrt(len(cce_robust))
+
+# We calculate the sensitivity (pct of change)
+sensitivity = ((cce_mg_robust_params - cce_mgc_params) / cce_mgc_params) * 100
+
+print(f"CCE Mean Group after removing outliers:")
+print(f"\n{cce_mg_robust_params}")
+
+print(f"\nSensitivity: {sensitivity}")
+
+robustness_table = pd.DataFrame({'Original': cce_mgc_params, 'Robust (without outliers)': cce_mg_robust_params, 'Sensitivity': sensitivity})
