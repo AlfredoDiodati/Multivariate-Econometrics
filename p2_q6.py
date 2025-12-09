@@ -5,6 +5,7 @@ from scipy.stats import norm
 import matplotlib.pyplot as plt
 from linearmodels.panel import PanelOLS
 import statsmodels.api as sm
+import p2_q4
 
 
 ismain = __name__ == '__main__'
@@ -42,7 +43,7 @@ for country in countries:
     # Define the variables
     y = country_data['GDP_growth']
 
-    x_vars = ['Investment', 'Human_capital', 'Trade_openness', 'GDP_growth_bar', 'Investment_bar', 'Human_capital_bar', 'Trade_openness_bar', 'GDP_growth_bar']
+    x_vars = ['Investment', 'Human_capital', 'Trade_openness', 'GDP_growth_bar', 'Investment_bar', 'Human_capital_bar', 'Trade_openness_bar']
     x = country_data[x_vars]
 
     # Add a constant for alpha_i
@@ -74,3 +75,21 @@ cce_mgc_se = cce_coefs_df.std()/ np.sqrt(n)
 
 print(f"CCE Mean Group Estimates: {cce_mgc_params}")
 print(f"\nCCE Mean Group Standard Errors: {cce_mgc_se}")
+
+#task 6.2
+
+#prepare pooled OLS and Mean Group data and CCE
+df_pooled_res = pd.DataFrame({'Pooled OLS': p2_q4.pooled_params, 'Pooled SE': p2_q4.pooled_bse})
+
+df_mg_res = pd.DataFrame({'Mean Group': p2_q4.mg_params, 'MG SE': p2_q4.mg_bse})
+
+df_cce_res = pd.DataFrame({'CCE MG': cce_mgc_params, 'CCE MG SE': cce_mgc_se})
+
+comparison = pd.concat([df_pooled_res, df_mg_res, df_cce_res], axis=1)
+
+order = ['const', 'Investment', 'Human_capital', 'Trade_openness']
+
+final_order = [idx for idx in order if idx in comparison.index]
+comparison = comparison.reindex(final_order)
+
+print(comparison)
